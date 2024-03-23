@@ -15,7 +15,7 @@ import (
 	"github.com/emersion/go-imap/client"
 	_ "github.com/emersion/go-message/charset"
 	"github.com/emersion/go-message/mail"
-	strip "github.com/grokify/html-strip-tags-go"
+	md "github.com/JohannesKaufmann/html-to-markdown"
 	"maunium.net/go/mautrix"
 )
 
@@ -191,20 +191,21 @@ func getMailContent(msg *imap.Message, section *imap.BodySectionName, roomID str
 		jmail.body = html.UnescapeString(htmlBody)
 		jmail.htmlFormat = true
 	} else {
-		if len(strings.Trim(plainBody, " ")) == 0 {
-			plainBody = htmlBody
+		if len(strings.Trim(plainBody, " ")) > 0 {
+			jmail.body = plainBody
+		} else {
+			converter := md.NewConverter("", true, nil)
+			markdown, err := converter.ConvertString(htmlBody)
+			if err != nil {
+				WriteLog(critical, "#56 Error converting html to markdown: "+err.Error())
+				log.Fatal(err)
+			}
+			jmail.body = markdown
 		}
-		parseMailBody(&plainBody)
-		jmail.body = plainBody
 		jmail.htmlFormat = false
 	}
 
 	return &jmail
-}
-
-func parseMailBody(body *string) {
-	*body = strings.ReplaceAll(*body, "<br>", "\r\n")
-	*body = strip.StripTags(html.UnescapeString(*body))
 }
 
 func viewMailbox(roomID string, client *mautrix.Client) {

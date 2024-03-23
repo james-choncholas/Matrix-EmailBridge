@@ -6,7 +6,7 @@ require (
 	github.com/emersion/go-imap v1.2.1
 	github.com/emersion/go-message v0.15.0
 	github.com/gomarkdown/markdown v0.0.0-20220510115730-2372b9aa33e5
-	github.com/grokify/html-strip-tags-go v0.0.1
+	github.com/JohannesKaufmann/html-to-markdown v1.4.0
 	github.com/mattn/go-sqlite3 v1.14.12
 	github.com/spf13/viper v1.11.0
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
